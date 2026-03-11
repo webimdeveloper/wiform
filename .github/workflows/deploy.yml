@@ -10,11 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Deploy to Hostinger via Rsync
         uses: easingthemes/ssh-deploy@main
         env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.HOSTINGER_IP }}
           REMOTE_USER: root
