@@ -17,7 +17,6 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.HOSTINGER_IP }}
-          REMOTE_USER: root # Or whatever username Hostinger gave you
-          TARGET: 
-/var/www/widev.pro/public_html/wp-content/plugins/wiform/
+          REMOTE_USER: root
+          TARGET: /var/www/widev.pro/public_html/wp-content/plugins/wiform/
           EXCLUDE: "/.git/, /.github/"
