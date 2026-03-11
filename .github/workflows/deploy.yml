@@ -6,11 +6,23 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Plugin Assets
+        run: npm run build
 
       - name: Deploy to Hostinger via Rsync
         uses: easingthemes/ssh-deploy@main
@@ -20,5 +32,6 @@ jobs:
           REMOTE_HOST: ${{ secrets.HOSTINGER_IP }}
           REMOTE_USER: root
           SOURCE: "./"
+          # Notice we only send the necessary files to live, keeping it clean!
           TARGET: /var/www/widev.pro/public_html/wp-content/plugins/wiform/
-          EXCLUDE: "/.git/, /.github/"
+          EXCLUDE: "/node_modules/, /.git/, /.github/, /src/, /tsconfig.json/, /vite.config.ts"
