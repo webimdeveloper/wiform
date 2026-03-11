@@ -19,5 +19,6 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.HOSTINGER_IP }}
           REMOTE_USER: root
+          SOURCE: "./"
           TARGET: /var/www/widev.pro/public_html/wp-content/plugins/wiform/
           EXCLUDE: "/.git/, /.github/"
