@@ -11,43 +11,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * 1. Add the Menu Item to the Sidebar
+ * 1. Add the Menu Item
  */
 add_action('admin_menu', function() {
-    add_menu_page(
-        'Wiform Settings',    // Page title
-        'Wiform',             // Menu title
-        'manage_options',     // Capability required
-        'wiform-admin',       // Menu slug
-        'wiform_admin_html',  // Function that outputs the HTML
-        'dashicons-forms',    // Icon
-        100                   // Position
-    );
+    add_menu_page('Wiform Settings', 'Wiform', 'manage_options', 'wiform-admin', 'wiform_admin_html', 'dashicons-forms', 100);
 });
 
-/**
- * 2. The HTML Container for Vue
- */
 function wiform_admin_html() {
-    echo '<div class="wrap">
-            <div id="app"></div> 
-          </div>';
+    echo '<div class="wrap"><div id="app"></div></div>';
 }
 
 /**
- * 3. Load the Compiled Assets
+ * 2. THE SMART LOADER (Ensure this is inside the <?php tags!)
  */
 add_action('admin_enqueue_scripts', function($hook) {
-    // Only load our scripts on our specific plugin page
-    if ($hook !== 'toplevel_page_wiform-admin') {
-        return;
-    }
+    if ($hook !== 'toplevel_page_wiform-admin') return;
 
+    $is_local = (strpos($_SERVER['HTTP_HOST'], 'wiform2.local') !== false);
     $plugin_url = plugin_dir_url(__FILE__);
 
-    // Load Tailwind CSS from the dist folder
-    wp_enqueue_style('wiform-styles', $plugin_url . 'dist/assets/index.css', [], '1.0.0');
-
-    // Load Vue JS from the dist folder
-    wp_enqueue_script('wiform-scripts', $plugin_url . 'dist/assets/index.js', [], '1.0.0', true);
+    if ($is_local) {
+        // Load from Vite Dev Server (for HMR)
+        echo '<script type="module" src="http://localhost:5173/@vite/client"></script>';
+        echo '<script type="module" src="http://localhost:5173/src/main.ts"></script>';
+    } else {
+        // Load from compiled Dist folder
+        wp_enqueue_style('wiform-styles', $plugin_url . 'dist/assets/index.css', [], '1.0.0');
+        wp_enqueue_script('wiform-scripts', $plugin_url . 'dist/assets/index.js', [], '1.0.0', true);
+    }
 });
