@@ -7,12 +7,21 @@ export default defineConfig({
     vue(),
     tailwindcss(),
   ],
+  server: {
+    // This is the CRITICAL line for WordPress dev
+    origin: 'http://localhost:5173', 
+    cors: true,
+    strictPort: true,
+    port: 5173,
+    hmr: {
+        host: 'localhost',
+    },
+  },
   build: {
     outDir: 'dist',
     emptyOutDir: true,
     rollupOptions: {
       output: {
-        // This stops Vite from adding random hashes to filenames
         entryFileNames: `assets/[name].js`,
         chunkFileNames: `assets/[name].js`,
         assetFileNames: `assets/[name].[ext]`
